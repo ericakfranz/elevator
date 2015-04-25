@@ -3,7 +3,7 @@
  * Plugin Name: Elevator
  * Plugin URI: https://fatpony.me/plugins/elevator/
  * Description: Painlessly add Jon Holman's elevator.js to your site. A scroll-to-top solution to musically soothing your visitors while being smoothly scrolled to the top of their screen.
- * Version: 1.0.0
+ * Version: 1.0.1
  * Author: Erica Franz
  * Author URI: https://fatpony.me/
  * Text Domain: elevator

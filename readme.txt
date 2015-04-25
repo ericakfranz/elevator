@@ -30,14 +30,18 @@ Audio (sourced from [BenSound](http://www.bensound.com/)) is Creative Commons.
 
 = No 'Back to Top' Button =
 
-Elevator uses the wp_footer(); tag to hook into. If your theme doesn’t include this tag somewhere (it's most commonly found in the footer.php template file, just before the closing tag), then Elevator can’t work it’s magic. Check your theme first if Elevator's 'Back to Top' button isn't appearing on the page after you've activated the plugin.
+Elevator uses the wp_footer(); tag to hook into. If your theme doesn't include this tag somewhere (it's most commonly found in the footer.php template file, just before the closing tag), then Elevator can't work it's magic. Check your theme first if Elevator's 'Back to Top' button isn't appearing on the page after you've activated the plugin.
 
 = 'Back to Top' Button Not Working =
 
-If your 'Back to Top' button is loading, but the Elevator seems to be broken and stuck in the Basement, check for JavaScript errors in your browser's console. You can use Google Chrome’s Dev Tools for this. If you're unfamiliar with checking for JavaScript errors in your browser, I suggest you check out Julie Pagano's [JavaScript Debugging for Beginners](http://juliepagano.com/blog/2014/05/18/javascript-debugging-for-beginners/#developer-tools) article.
+If your 'Back to Top' button is loading, but the Elevator seems to be broken and stuck in the Basement, check for JavaScript errors in your browser's console. You can use Google Chrome's Dev Tools for this. If you're unfamiliar with checking for JavaScript errors in your browser, I suggest you check out Julie Pagano's [JavaScript Debugging for Beginners](http://juliepagano.com/blog/2014/05/18/javascript-debugging-for-beginners/#developer-tools) article.
 
 If your site is generating a JavaScript error, it's possible for it to conflict with Elevator and I suggest you resolve the JavaScript error before proceeding with any other troubleshooting.
 
 == Changelog ==
+
+= 1.0.1 =
+* Remove curly quotes in FAQ
+
 = 1.0.0 =
 * Initial Release
