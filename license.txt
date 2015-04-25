@@ -23,3 +23,4 @@ SOFTWARE.
 ----------
 
 Audio (sourced from [BenSound](http://www.bensound.com/)) is Creative Commons.
+Plugin Repo Banner Image, Background (sourced from [Luigi Anzivino](https://www.flickr.com/photos/ilmungo/27091536)) is Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International.

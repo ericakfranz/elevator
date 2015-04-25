@@ -20,6 +20,7 @@ You can also customize the appearance of Elevator with CSS. Need help? See the [
 
 Elevator.js created by [Tim Holman](http://tholman.com/).
 Audio (sourced from [BenSound](http://www.bensound.com/)) is Creative Commons.
+Plugin Repo Banner Image, Background (sourced from [Luigi Anzivino](https://www.flickr.com/photos/ilmungo/27091536)) is Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International.
 
 == Installation ==
 1. Install Elevator either through your WordPress Plugins screen or by uploading the files to your server.
