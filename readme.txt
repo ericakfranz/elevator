@@ -43,6 +43,9 @@ If your site is generating a JavaScript error, it's possible for it to conflict 
 
 == Changelog ==
 
+= 1.0.3 =
+* Fix version number for dependencies
+
 = 1.0.2 =
 * Version bump, compatible with WordPress 4.3
 
