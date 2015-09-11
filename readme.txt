@@ -2,7 +2,7 @@
 Contributors: ericakfranz
 Tags: scrolltotop,backtotop,navigation,music
 Requires at least: 3.5
-Tested up to: 4.2
+Tested up to: 4.3
 Stable tag: trunk
 License: MIT
 License URI: http://opensource.org/licenses/MIT
@@ -13,6 +13,8 @@ Elevator is a streamlined little WordPress plugin with only one purpose Ð to soo
 Based on the brilliant script [Elevator.js](https://github.com/tholman/elevator.js). How can you resist the familiar notes and smooth ride we've all come to expect on a quality elevator ride? 
 
 Just activate and enjoy!
+
+[demo](https://fatpony.me/plugins/elevator/)
 
 **Customize Elevator**
 You can also customize the appearance of Elevator with CSS. Need help? See the [Elevator Style Guide](https://fatpony.me/plugins/elevator/style-guide/).
@@ -40,6 +42,9 @@ If your 'Back to Top' button is loading, but the Elevator seems to be broken and
 If your site is generating a JavaScript error, it's possible for it to conflict with Elevator and I suggest you resolve the JavaScript error before proceeding with any other troubleshooting.
 
 == Changelog ==
+
+= 1.0.2 =
+* Version bump, compatible with WordPress 4.3
 
 = 1.0.1 =
 * Remove curly quotes in FAQ
