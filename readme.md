@@ -9,6 +9,7 @@ Based on the brilliant script [Elevator.js](https://github.com/tholman/elevator.
 ## Installation
 
 ![Elevator can be found in the WordPress plugin repository](https://fatpony.me/wp-content/uploads/2015/04/elevator-plugin.jpg)
+
 1. Install Elevator either through your WordPress Plugins screen or by uploading the files to the /wp-content/plugins/ directory via FTP.
 2. Activate Elevator.
 3. Enjoy the elevator ride!
