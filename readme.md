@@ -37,6 +37,10 @@ Please contribute using [Github Flow](https://guides.github.com/introduction/flo
 - Plugin Repo Banner Image Background, sourced from [Luigi Anzivino](https://www.flickr.com/photos/ilmungo/27091536), is Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International.
 
 ## Changelog
+
+##### 1.0.3
+- Fix version number for dependencies
+
 ##### 1.0.2
 - Version bump, compatible with WordPress 4.3
 
