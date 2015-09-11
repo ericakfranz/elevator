@@ -18,7 +18,7 @@ function elevator_enqueue_scripts() {
     $path = plugin_dir_url( __FILE__ );
     
     // Scripts   
-	wp_register_script( 'elevator', $path . 'assets/js/elevator.min.js', false, '1.1.0', true );
+	wp_register_script( 'elevator', $path . 'assets/js/elevator.min.js', false, '1.0.3', true );
 	wp_enqueue_script( 'elevator' );
 
 }
