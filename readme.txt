@@ -43,6 +43,9 @@ If your site is generating a JavaScript error, it's possible for it to conflict 
 
 == Changelog ==
 
+= 1.0.4 =
+* Replace .MP3 files with .OGG to resolve occasional issue of music not playing in Chrome and Chromium browsers.
+
 = 1.0.3 =
 * Fix version number for dependencies
 

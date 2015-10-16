@@ -3,7 +3,7 @@
  * Plugin Name: Elevator
  * Plugin URI: https://fatpony.me/plugins/elevator/
  * Description: Smoothly escort your visitors back to the top of the page with music accompaniment and a 'Ting!' on arrival.
- * Version: 1.0.3
+ * Version: 1.0.4
  * Author: Erica Franz
  * Author URI: https://fatpony.me/
  * Text Domain: elevator
@@ -57,8 +57,8 @@ function elevator_script() {
             $script .= 'var elementButton = document.querySelector(\'.elevator-button\');';
             $script .= 'var elevator = new Elevator({';
                 $script .= 'element: elementButton,';
-                $script .= 'mainAudio: \'' . $path . 'assets/music/elevator-music.mp3\','; // Music from http://www.bensound.com/
-                $script .= 'endAudio: \'' . $path . 'assets/music/ding.mp3\''; // Music from http://www.bensound.com/
+                $script .= 'mainAudio: \'' . $path . 'assets/music/elevator-music.ogg\','; // Music from http://www.bensound.com/
+                $script .= 'endAudio: \'' . $path . 'assets/music/ding.ogg\''; // Music from http://www.bensound.com/
             $script .= '});';
         $script .= '}';
     $script .= '</script>';
