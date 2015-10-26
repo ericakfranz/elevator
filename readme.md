@@ -38,6 +38,9 @@ Please contribute using [Github Flow](https://guides.github.com/introduction/flo
 
 ## Changelog
 
+##### 1.0.5
+- Fix elevator-music.ogg audio issue at start
+
 ##### 1.0.4
 - Replace .MP3 files with .OGG to resolve occasional issue of music not playing in Chrome and Chromium browsers.
 
