@@ -2,7 +2,7 @@
 Contributors: ericakfranz
 Tags: scrolltotop,backtotop,navigation,music
 Requires at least: 3.5
-Tested up to: 4.3
+Tested up to: 4.4
 Stable tag: trunk
 License: MIT
 License URI: http://opensource.org/licenses/MIT
@@ -42,6 +42,9 @@ If your 'Back to Top' button is loading, but the Elevator seems to be broken and
 If your site is generating a JavaScript error, it's possible for it to conflict with Elevator and I suggest you resolve the JavaScript error before proceeding with any other troubleshooting.
 
 == Changelog ==
+
+= 1.0.5.1 =
+* Version bump, compatible with WordPress 4.4
 
 = 1.0.5 =
 * Fix elevator-music.ogg audio issue at start

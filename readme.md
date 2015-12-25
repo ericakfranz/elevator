@@ -38,6 +38,9 @@ Please contribute using [Github Flow](https://guides.github.com/introduction/flo
 
 ## Changelog
 
+##### 1.0.5.1 
+- Version bump, compatible with WordPress 4.4
+
 ##### 1.0.5
 - Fix elevator-music.ogg audio issue at start
 
