@@ -38,6 +38,9 @@ Please contribute using [Github Flow](https://guides.github.com/introduction/flo
 
 ## Changelog
 
+##### 1.0.5.2
+- Version bump, compatible with WordPress 4.5
+
 ##### 1.0.5.1 
 - Version bump, compatible with WordPress 4.4
 

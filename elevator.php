@@ -3,7 +3,7 @@
  * Plugin Name: Elevator
  * Plugin URI: https://fatpony.me/plugins/elevator/
  * Description: Smoothly escort your visitors back to the top of the page with music accompaniment and a 'Ting!' on arrival.
- * Version: 1.0.5.1
+ * Version: 1.0.5.2
  * Author: Erica Franz
  * Author URI: https://fatpony.me/
  * Text Domain: elevator
