@@ -22,7 +22,5 @@ SOFTWARE.
 
 ----------
 
-Banner & Icon Image Photography by [Andrew Welch](https://unsplash.com/@andrewwelch3?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText) via [Unsplash](https://unsplash.com) is free to use under the [Unsplash License](https://unsplash.com/license).
-
 Audio (sourced from [BenSound](http://www.bensound.com/)) is Creative Commons.
 Plugin Repo Banner Image, Background (sourced from [Luigi Anzivino](https://www.flickr.com/photos/ilmungo/27091536)) is Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International.
