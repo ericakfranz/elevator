@@ -9,102 +9,177 @@
  * Elevator.js
  *********************************************/
 
-var Elevator = (function() {
-
-    'use strict';
+var Elevator = function(options) {
+    "use strict";
 
     // Elements
     var body = null;
+    var doors = null;
 
     // Scroll vars
     var animation = null;
     var duration = null; // ms
+    var doorsDurationRatio = null;
     var customDuration = false;
     var startTime = null;
     var startPosition = null;
+    var endPosition = 0;
+    var targetElement = null;
+    var verticalPadding = null;
+    var elevating = false;
 
+    var startCallback;
     var mainAudio;
     var endAudio;
+    var endCallback;
 
-    var elevating = false;
+    var that = this;
 
     /**
      * Utils
      */
 
-    // Soft object augmentation
-    function extend( target, source ) {
-        for ( var key in source ) {
-            if ( !( key in target ) ) {
-                target[ key ] = source[ key ];
+    // Thanks Mr Penner - http://robertpenner.com/easing/
+    function easeInOutQuad(t, b, c, d) {
+        t /= d / 2;
+        if (t < 1) return c / 2 * t * t + b;
+        t--;
+        return -c / 2 * (t * (t - 2) - 1) + b;
+    }
+
+    function extendParameters(options, defaults) {
+        for (var option in defaults) {
+            var t =
+                options[option] === undefined && typeof option !== "function";
+            if (t) {
+                options[option] = defaults[option];
             }
         }
-        return target;
-    };
+        return options;
+    }
 
-    // Thanks Mr Penner - http://robertpenner.com/easing/
-    function easeInOutQuad( t, b, c, d ) {
-        t /= d/2;
-        if (t < 1) return c/2*t*t + b;
-        t--;
-        return -c/2 * (t*(t-2) - 1) + b;
-    };
+    function getVerticalOffset(element) {
+        var verticalOffset = 0;
+        while (element) {
+            verticalOffset += element.offsetTop || 0;
+            element = element.offsetParent;
+        }
+
+        if (verticalPadding) {
+            verticalOffset = verticalOffset - verticalPadding;
+        }
+
+        return verticalOffset;
+    }
 
     /**
      * Main
      */
 
     // Time is passed through requestAnimationFrame, what a world!
-    function animateLoop( time ) {
+    function animateLoop(time) {
         if (!startTime) {
             startTime = time;
         }
 
         var timeSoFar = time - startTime;
-        var easedPosition = easeInOutQuad(timeSoFar, startPosition, -startPosition, duration);                        
-        
-        window.scrollTo(0, easedPosition);
 
-        if( timeSoFar < duration ) {
+        var easedPosition = startPosition, doorsPosition = -1;
+
+        if (!doors) {
+            // No doors - keep your limbs inside the car at all times!
+            easedPosition = easeInOutQuad(
+                timeSoFar,
+                startPosition,
+                endPosition - startPosition,
+                duration
+            );
+        } else if (timeSoFar < doorsDurationRatio * duration) {
+            // Close doors
+            doorsPosition = easeInOutQuad(
+                timeSoFar,
+                -52,
+                51,
+                doorsDurationRatio * duration
+            );
+        } else if(timeSoFar < (1 - doorsDurationRatio) * duration) {
+            // Safe operation, doors closed
+            easedPosition = easeInOutQuad(
+                timeSoFar - doorsDurationRatio * duration,
+                startPosition,
+                endPosition - startPosition,
+                duration * (1 - 2 * doorsDurationRatio)
+            );
+        } else {
+            // Open doors
+            easedPosition = endPosition;
+            doorsPosition = easeInOutQuad(
+                timeSoFar - (1 - doorsDurationRatio) * duration,
+                -1,
+                -51,
+                doorsDurationRatio * duration
+            );
+        }
+
+        window.scrollTo(0, easedPosition);
+        if (doors) {
+            doors[0].style.left = doorsPosition + 'vw';
+            doors[1].style.right = doorsPosition + 'vw';
+        }
+
+        if (timeSoFar < duration) {
             animation = requestAnimationFrame(animateLoop);
         } else {
             animationFinished();
         }
-   };
+    }
 
-//            ELEVATE!
-//              /
-//         ____
-//       .'    '=====<0
-//       |======|
-//       |======|
-//       [IIIIII[\--()
-//       |_______|
-//       C O O O D
-//      C O  O  O D
-//     C  O  O  O  D
-//     C__O__O__O__D
-//    [_____________]
-    function elevate() {
-
-        if( elevating ) {
+    //            ELEVATE!
+    //              /
+    //         ____
+    //       .'    '=====<0
+    //       |======|
+    //       |======|
+    //       [IIIIII[\--()
+    //       |_______|
+    //       C O O O D
+    //      C O  O  O D
+    //     C  O  O  O  D
+    //     C__O__O__O__D
+    //    [_____________]
+    this.elevate = function() {
+        if (elevating) {
             return;
         }
 
         elevating = true;
-        startPosition = (document.documentElement.scrollTop || body.scrollTop);
-        
+        startPosition = document.documentElement.scrollTop || body.scrollTop;
+        updateEndPosition();
+
         // No custom duration set, so we travel at pixels per millisecond. (0.75px per ms)
-        if( !customDuration ) {
-            duration = (startPosition * 1.5);
+        if (!customDuration) {
+            duration = Math.abs(endPosition - startPosition) * 1.5 + 1000;
+            doorsDurationRatio = 500 / duration;
         }
 
-        requestAnimationFrame( animateLoop );
+        requestAnimationFrame(animateLoop);
 
         // Start music!
-        if( mainAudio ) {
+        if (mainAudio) {
             mainAudio.play();
         }
+
+        if (startCallback) {
+            startCallback();
+        }
+    };
+
+    function browserMeetsRequirements() {
+        return (
+            window.requestAnimationFrame &&
+            window.Audio &&
+            window.addEventListener
+        );
     }
 
     function resetPositions() {
@@ -113,72 +188,132 @@ var Elevator = (function() {
         elevating = false;
     }
 
+    function updateEndPosition() {
+        if (targetElement) {
+            endPosition = getVerticalOffset(targetElement);
+        }
+    }
+
     function animationFinished() {
-        
         resetPositions();
 
         // Stop music!
-        if( mainAudio ) {
+        if (mainAudio) {
             mainAudio.pause();
             mainAudio.currentTime = 0;
         }
 
-        if( endAudio ) {
+        if (endAudio) {
             endAudio.play();
+        }
+
+        if (endCallback) {
+            endCallback();
         }
     }
 
     function onWindowBlur() {
-
         // If animating, go straight to the top. And play no more music.
-        if( elevating ) {
-
-            cancelAnimationFrame( animation );
+        if (elevating) {
+            cancelAnimationFrame(animation);
             resetPositions();
 
-            if( mainAudio ) {
+            if (mainAudio) {
                 mainAudio.pause();
                 mainAudio.currentTime = 0;
             }
 
-            window.scrollTo(0, 0);
+            updateEndPosition();
+            window.scrollTo(0, endPosition);
         }
     }
 
-    //@TODO: Does this need tap bindings too?
-    function bindElevateToElement( element ) {
-        element.addEventListener('click', elevate, false);
+    function bindElevateToElement(element) {
+        if (element.addEventListener) {
+            element.addEventListener("click", that.elevate, false);
+        } else {
+            // Older browsers
+            element.attachEvent("onclick", function() {
+                updateEndPosition();
+                document.documentElement.scrollTop = endPosition;
+                document.body.scrollTop = endPosition;
+                window.scroll(0, endPosition);
+            });
+        }
     }
 
-    function main( options ) {
+    function init(_options) {
+		// Take the stairs instead
+		if (!browserMeetsRequirements()) {
+			return;
+		}
 
-        // Bind to element click event, if need be.
+        // Bind to element click event.
         body = document.body;
 
-        if( options.element ) {
-            bindElevateToElement( options.element );
+        var defaults = {
+            duration: undefined,
+            doorsDurationRatio: 0.1,
+            mainAudio: false,
+            endAudio: false,
+            preloadAudio: true,
+            loopAudio: true,
+            startCallback: null,
+            endCallback: null
+        };
+
+        _options = extendParameters(_options, defaults);
+
+        if (_options.element) {
+            bindElevateToElement(_options.element);
         }
 
-        if( options.duration ) {
+        if (_options.doors) {
+            doors = _options.doors;
+        }
+
+        if (_options.doorsDurationRatio) {
+            doorsDurationRatio = _options.doorsDurationRatio;
+        }
+
+        if (_options.duration) {
             customDuration = true;
-            duration = options.duration;
+            duration = _options.duration;
         }
 
-        if( options.mainAudio ) {
-            mainAudio = new Audio( options.mainAudio );
-            mainAudio.setAttribute( 'preload', 'true' ); //@TODO: Option to not preload audio.
-            mainAudio.setAttribute( 'loop', 'true' );
+        if (_options.targetElement) {
+            targetElement = _options.targetElement;
         }
 
-        if( options.endAudio ) {
-            endAudio = new Audio( options.endAudio );
-            endAudio.setAttribute( 'preload', 'true' );
+        if (_options.verticalPadding) {
+            verticalPadding = _options.verticalPadding;
         }
 
-        window.addEventListener('blur', onWindowBlur, false);
+        window.addEventListener("blur", onWindowBlur, false);
+
+        if (_options.mainAudio) {
+            mainAudio = new Audio(_options.mainAudio);
+            mainAudio.setAttribute("preload", _options.preloadAudio);
+            mainAudio.setAttribute("loop", _options.loopAudio);
+        }
+
+        if (_options.endAudio) {
+            endAudio = new Audio(_options.endAudio);
+            endAudio.setAttribute("preload", "true");
+        }
+
+        if (_options.endCallback) {
+            endCallback = _options.endCallback;
+        }
+
+        if (_options.startCallback) {
+            startCallback = _options.startCallback;
+        }
     }
 
-    return extend(main, {
-        elevate: elevate
-    });
-})();
+    init(options);
+};
+
+if (typeof module !== "undefined" && module.exports) {
+    module.exports = Elevator;
+}
