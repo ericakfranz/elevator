@@ -48,12 +48,12 @@ function elevator_button() {
     echo $button;
 
     // Let's add doors... ?
-    $doors = '<div id="door-left" style="position: fixed; top: 0; bottom: 0; left: -52vw; width: 50vw; content-sizing: content-box; border: 3px solid #666; background-color: #aaa;">';
-            $doors .= '<div style="position: absolute; top: 0; height: 100vh; left: 16vw; right: 16vw; border-left: 3px solid #666; border-right: 3px solid #666;"></div>';
+    $doors = '<div id="door-left" style="position: fixed; top: 0; bottom: 0; left: -52vw; width: 50vw; content-sizing: content-box;">';
+            $doors .= '<div id="door-left-break" style="position: absolute; top: 0; height: 100vh; left: 16vw; right: 16vw;"></div>';
     $doors .= '</div>';
 
-    $doors .= '<div id="door-right" style="position: fixed; top: 0; bottom:0; right: -52vw; width: 50vw; content-sizing: content-box; border: 3px solid #666; background-color: #aaa;">';
-            $doors .= '<div style="position: absolute; top: 0; height: 100vh; left: 16vw; right: 16vw; border-left: 3px solid #666; border-right: 3px solid #666;"></div>';
+    $doors .= '<div id="door-right" style="position: fixed; top: 0; bottom:0; right: -52vw; width: 50vw; content-sizing: content-box;">';
+            $doors .= '<div id="door-right-break" style="position: absolute; top: 0; height: 100vh; left: 16vw; right: 16vw;"></div>';
     $doors .= '</div>';
 
     echo $doors;
