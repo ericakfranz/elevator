@@ -6,6 +6,10 @@ A scroll-to-top solution to musically soothing your visitors while being smoothl
 
 Based on the brilliant script [Elevator.js](https://github.com/tholman/elevator.js). How can you resist the familiar notes and smooth ride we've all come to expect on a quality elevator ride? Complete with a 'Ting!' once you arrive at your destination.
 
+## Choose your music
+
+Go to **Settings > Elevator** to pick from 26 tracks and preview each one. The ding always plays at the top. **The default music is now "Lounge Jazz" by AurosonMusic; the original elevator music has been removed.** Music files are OGG only to keep the plugin small, so browsers that cannot play OGG (for example Safari older than 14.1) scroll without sound.
+
 ## Installation
 
 1. Install Elevator either through your WordPress Plugins screen or by uploading the files to the /wp-content/plugins/ directory via FTP.
@@ -19,6 +23,14 @@ Just activate and enjoy!
 ## Customization
 
 You can also customize the appearance of Elevator with CSS. Need help? See the [Elevator Style Guide](https://fatpony.me/plugins/elevator/elevator-style-guide/).
+
+## Credits
+
+Elevator by [Erica Franz](https://fatpony.me/) ([plugin page](https://fatpony.me/plugins/elevator)). Based on [Elevator.js](https://github.com/tholman/elevator.js) by Tim Holman. All music is Creative Commons licensed. Thank you to: 1000 Handz, Aldous Ichnite, Alex Morgan, Andrew Walton, AurosonMusic, Charlie and Todd, Gagmesharkoff, Jesus Ángel Morato, Karen, Kevin MacLeod, Lite Saturation, Lobo Loco, Lopkerjo, Lundstroem, Monroeville Music Center, PulseBox, Shane Ivers, Soularflair, VADE, Waveloom and wekont. Full links are in `readme.txt`.
+
+## Changelog
+
+**1.1.0** - **The default music is now "Lounge Jazz"; the original music is removed.** New Settings > Elevator page with 26 previewable tracks. Requires WordPress 4.7+.
 
 ## Support
 
