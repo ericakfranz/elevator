@@ -114,6 +114,63 @@ function elevator_sanitize_track( $value ) {
 }
 
 /**
+ * Whether the built-in Back to Top link is output in the footer.
+ *
+ * Filter `elevator_output_button` to return false to switch it off in code.
+ *
+ * @return bool
+ */
+function elevator_should_output_button() {
+
+	$output = '0' !== get_option( 'elevator_output', '1' );
+
+	return (bool) apply_filters( 'elevator_output_button', $output );
+
+}
+
+/**
+ * CSS selector of an existing element to attach Elevator to, or an empty string.
+ *
+ * Filter `elevator_button_selector` to set it in code.
+ *
+ * @return string
+ */
+function elevator_get_selector() {
+
+	$selector = get_option( 'elevator_selector', '' );
+	$selector = is_string( $selector ) ? $selector : '';
+
+	return (string) apply_filters( 'elevator_button_selector', $selector );
+
+}
+
+/**
+ * Sanitize the output setting to '1' or '0'.
+ *
+ * @param mixed $value Submitted value.
+ * @return string
+ */
+function elevator_sanitize_output( $value ) {
+
+	return '1' === $value ? '1' : '0';
+
+}
+
+/**
+ * Sanitize the selector setting: plain text, trimmed, limited length.
+ *
+ * @param mixed $value Submitted value.
+ * @return string
+ */
+function elevator_sanitize_selector( $value ) {
+
+	$value = is_string( $value ) ? trim( sanitize_text_field( $value ) ) : '';
+
+	return substr( $value, 0, 200 );
+
+}
+
+/**
  * URL of a file in assets/music/.
  *
  * @param string $name File name without extension.
@@ -138,13 +195,19 @@ function elevator_enqueue_scripts() {
 	$settings = array(
 		'mainAudio' => esc_url_raw( elevator_music_url( elevator_get_selected_track() ) ),
 		'endAudio'  => esc_url_raw( elevator_music_url( 'ding' ) ),
+		'selector'  => elevator_get_selector(),
 	);
 
+	// Attach to the custom selector if it matches anything, else to the built-in link.
 	$script  = 'window.addEventListener( "load", function() {';
-	$script .= 'var elementButton = document.querySelector( ".elevator-button" );';
-	$script .= 'if ( ! elementButton ) { return; }';
 	$script .= 'var settings = ' . wp_json_encode( $settings ) . ';';
-	$script .= 'new Elevator( { element: elementButton, mainAudio: settings.mainAudio, endAudio: settings.endAudio } );';
+	$script .= 'var elements = [];';
+	$script .= 'if ( settings.selector ) { try { elements = Array.prototype.slice.call( document.querySelectorAll( settings.selector ) ); } catch ( e ) {} }';
+	$script .= 'if ( ! elements.length ) { var builtIn = document.querySelector( ".elevator-button" ); if ( builtIn ) { elements = [ builtIn ]; } }';
+	$script .= 'elements.forEach( function( element ) {';
+	$script .= 'element.addEventListener( "click", function( event ) { event.preventDefault(); } );';
+	$script .= 'new Elevator( { element: element, mainAudio: settings.mainAudio, endAudio: settings.endAudio } );';
+	$script .= '} );';
 	$script .= '} );';
 
 	wp_add_inline_script( 'elevator', $script );
@@ -156,6 +219,10 @@ add_action( 'wp_enqueue_scripts', 'elevator_enqueue_scripts' );
 
 // Add an elevator button
 function elevator_button() {
+
+	if ( ! elevator_should_output_button() ) {
+		return;
+	}
 
 	// Begin Elevator Container
 	$button = '<div id="elevator" class="elevator-container">';
@@ -185,6 +252,26 @@ function elevator_register_settings() {
 			'type'              => 'string',
 			'sanitize_callback' => 'elevator_sanitize_track',
 			'default'           => ELEVATOR_DEFAULT_TRACK,
+		)
+	);
+
+	register_setting(
+		'elevator_button_options',
+		'elevator_output',
+		array(
+			'type'              => 'string',
+			'sanitize_callback' => 'elevator_sanitize_output',
+			'default'           => '1',
+		)
+	);
+
+	register_setting(
+		'elevator_button_options',
+		'elevator_selector',
+		array(
+			'type'              => 'string',
+			'sanitize_callback' => 'elevator_sanitize_selector',
+			'default'           => '',
 		)
 	);
 
@@ -238,9 +325,47 @@ function elevator_render_options_page() {
 	$tracks   = elevator_get_tracks();
 	$artists  = elevator_get_artists();
 	$selected = elevator_get_selected_track();
+	// Tab is display-only, so no nonce is needed.
+	$tab = ( isset( $_GET['tab'] ) && 'button' === sanitize_key( wp_unslash( $_GET['tab'] ) ) ) ? 'button' : 'music'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 	?>
 	<div class="wrap">
 		<h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
+
+		<h2 class="nav-tab-wrapper">
+			<a href="<?php echo esc_url( admin_url( 'options-general.php?page=elevator' ) ); ?>" class="nav-tab<?php echo 'music' === $tab ? ' nav-tab-active' : ''; ?>"><?php esc_html_e( 'Music', 'elevator' ); ?></a>
+			<a href="<?php echo esc_url( admin_url( 'options-general.php?page=elevator&tab=button' ) ); ?>" class="nav-tab<?php echo 'button' === $tab ? ' nav-tab-active' : ''; ?>"><?php esc_html_e( 'Back to Top Link', 'elevator' ); ?></a>
+		</h2>
+
+		<?php if ( 'button' === $tab ) : ?>
+		<p><?php esc_html_e( 'Choose whether Elevator adds its own Back to Top link, or attach the elevator ride to a link your theme already has.', 'elevator' ); ?></p>
+
+		<form action="options.php" method="post">
+			<?php settings_fields( 'elevator_button_options' ); ?>
+			<table class="form-table" role="presentation">
+				<tbody>
+					<tr>
+						<th scope="row"><?php esc_html_e( 'Elevator link', 'elevator' ); ?></th>
+						<td>
+							<input type="hidden" name="elevator_output" value="0" />
+							<label>
+								<input type="checkbox" name="elevator_output" value="1" <?php checked( '0' !== get_option( 'elevator_output', '1' ) ); ?> />
+								<?php esc_html_e( 'Add the Back to Top link to the bottom of every page', 'elevator' ); ?>
+							</label>
+							<p class="description"><?php esc_html_e( 'Turn this off if your theme already has a Back to Top link.', 'elevator' ); ?></p>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row"><label for="elevator_selector"><?php esc_html_e( 'Use my own link', 'elevator' ); ?></label></th>
+						<td>
+							<input type="text" id="elevator_selector" name="elevator_selector" class="regular-text code" value="<?php echo esc_attr( get_option( 'elevator_selector', '' ) ); ?>" placeholder=".back-to-top" />
+							<p class="description"><?php esc_html_e( 'Optional. Enter a CSS selector for an existing link, such as .back-to-top or #scroll-top. Clicking it will play the music and scroll to the top. If nothing on the page matches, the built-in link is used.', 'elevator' ); ?></p>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<?php submit_button(); ?>
+		</form>
+		<?php else : ?>
 		<p><?php esc_html_e( 'Choose the music that plays while your visitors ride back to the top. A ding always plays when they arrive.', 'elevator' ); ?></p>
 
 		<form action="options.php" method="post">
@@ -288,6 +413,7 @@ function elevator_render_options_page() {
 			</table>
 			<?php submit_button(); ?>
 		</form>
+		<?php endif; ?>
 
 		<h2><?php esc_html_e( 'Credits', 'elevator' ); ?></h2>
 		<p>
@@ -309,7 +435,7 @@ function elevator_render_options_page() {
 			);
 			?>
 		</p>
-		<p><?php esc_html_e( 'All music is Creative Commons licensed; see the credit under each track above.', 'elevator' ); ?></p>
+		<p><?php esc_html_e( 'All music is Creative Commons licensed; see the credit under each track on the Music tab.', 'elevator' ); ?></p>
 	</div>
 	<?php
 
